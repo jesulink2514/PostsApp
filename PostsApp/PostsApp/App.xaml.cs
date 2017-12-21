@@ -1,8 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using Acr.UserDialogs;
 using PostsApp.Views;
 using Autofac;
@@ -43,40 +39,7 @@ namespace PostsApp
             Builder.RegisterTypeForNavigation<PhotosPage>();
             Builder.RegisterTypeForNavigation<CommentsPage>();
 
-            Locator.CurrentMutable.RegisterConstant(new TraceHandler(), typeof(HttpMessageHandler));
-
-            Builder.Register((c) => new ServiceFactory<IPostsService>("https://jsonplaceholder.typicode.com"))
-                .AsImplementedInterfaces()
-                .SingleInstance();
-
             Builder.RegisterInstance(UserDialogs.Instance);
-
-            //NetCache.RequestCache = new InMemoryCache();
-        }
-    }
-
-    public class TraceHandler : DelegatingHandler
-    {
-        private readonly Stopwatch _stopWatch;
-
-        public TraceHandler() : base(new HttpClientHandler())
-        {
-            _stopWatch = new Stopwatch();
-        }
-
-        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        {
-            _stopWatch.Reset();
-            _stopWatch.Start();
-            Debug.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-            Debug.WriteLine($"{request.Method} - {request.RequestUri}");
-            var resp = await base.SendAsync(request, cancellationToken);
-            _stopWatch.Stop();
-            Debug.WriteLine($"{resp.StatusCode} - {_stopWatch.ElapsedMilliseconds}ms ellapsed");
-            Debug.WriteLine("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-            
-            return resp;
-
         }
     }
 }

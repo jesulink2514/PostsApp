@@ -11,21 +11,13 @@ namespace PostsApp.ViewModels
 {
 	public class PhotosPageViewModel : BindableBase, INavigatedAware
 	{
-	    private readonly IServiceFactory<IPostsService> _postsService;
-
-	    public PhotosPageViewModel(IServiceFactory<IPostsService> postsService)
-	    {
-	        _postsService = postsService;
-	    }
-
 	    public void OnNavigatedFrom(NavigationParameters parameters)
 	    {
 	    }
 
-	    public async void OnNavigatedTo(NavigationParameters parameters)
+	    public void OnNavigatedTo(NavigationParameters parameters)
 	    {
-	        Photos = App.Photos ?? 
-                (await _postsService.UserInitiated.ListPhotosAsync()).ToList();
+	        //Descargar fotos;
 	    }
 
 	    public List<Photo> Photos { get; private set; }
