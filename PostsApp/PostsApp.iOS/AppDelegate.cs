@@ -2,6 +2,7 @@
 using UIKit;
 using Autofac;
 using Prism.Autofac;
+using Xamarin.Forms;
 
 namespace PostsApp.iOS
 {
@@ -20,7 +21,8 @@ namespace PostsApp.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
-            global::Xamarin.Forms.Forms.Init();
+            Forms.SetFlags("FastRenderers_Experimental");
+            Forms.Init();
             LoadApplication(new App(new iOSInitializer()));
 
             return base.FinishedLaunching(app, options);

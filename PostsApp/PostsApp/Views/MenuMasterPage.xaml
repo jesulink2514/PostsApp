@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+                  xmlns:views="clr-namespace:PostsApp.Views;assembly=PostsApp"
+                  prism:ViewModelLocator.AutowireViewModel="True"
+                  x:Name="Page"
+                  x:Class="PostsApp.Views.MenuMasterPage"
+                  IsPresented="{Binding IsPresented}">
+
+    <MasterDetailPage.Master>
+        <ContentPage Title="Menu">
+            <StackLayout BackgroundColor="Accent" VerticalOptions="FillAndExpand">
+                <Label Text="PostsApp" Margin="20"
+                       FontSize="Large" TextColor="White"/>
+                <ListView ItemsSource="{Binding MenuOptions}" 
+                          SelectedItem="{Binding SelectedMenu}"
+                          VerticalOptions="FillAndExpand">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <TextCell Text="{Binding Text}" TextColor="White" 
+                                      CommandParameter="{Binding .}"
+                                      Command="{Binding GoToCommand}"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
+        </ContentPage>
+    </MasterDetailPage.Master>
+    
+</MasterDetailPage>

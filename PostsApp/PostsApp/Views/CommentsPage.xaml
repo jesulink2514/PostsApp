@@ -1,21 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="PostsApp.Views.MainPage"
-             Title="Posts"
-             IsBusy="{Binding IsLoading}">
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="PostsApp.Views.CommentsPage" Title="Comments">
     <ListView CachingStrategy="RecycleElement"
-            ItemsSource="{Binding Posts}" 
-            RefreshCommand="{Binding RefreshPostsCommand}"
-            IsPullToRefreshEnabled="True" HasUnevenRows="False"
-            IsRefreshing="{Binding IsLoading}" RowHeight="200"
-            ItemSelected="ListView_OnItemSelected">
+              ItemsSource="{Binding Comments}" 
+              HasUnevenRows="False"
+              RowHeight="200">
         <ListView.ItemTemplate>
             <DataTemplate>
                 <ViewCell>
                     <StackLayout CompressedLayout.IsHeadless="True" Margin="15">
-                        <Label Text="{Binding Title}" TextColor="MediumSlateBlue"
-                                   FontSize="Medium" FontAttributes="Bold"/>
+                        <Label Text="{Binding Name}" TextColor="MediumSlateBlue"
+                               FontSize="Medium" FontAttributes="Bold"/>
+                        <Label Text="{Binding Email}" TextColor="MediumSlateBlue"
+                               FontSize="Medium"/>
                         <Label Text="{Binding Body}" TextColor="CadetBlue"/>
                     </StackLayout>
                 </ViewCell>
