@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
 using Acr.UserDialogs;
 using PostsApp.Views;
 using Autofac;
+using Fusillade;
 using PostsApp.Models;
 using PostsApp.Services;
 using Prism.Autofac;
+using Refit;
 using Splat;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -40,6 +44,13 @@ namespace PostsApp
             Builder.RegisterTypeForNavigation<CommentsPage>();
 
             Builder.RegisterInstance(UserDialogs.Instance);
+
+            Builder.Register((c) => 
+                    new FussiladeApi<IPostsService>(
+                        "https://jsonplaceholder.typicode.com"
+                    ))
+                .As<IApi<IPostsService>>()
+                .SingleInstance();
         }
     }
 }
