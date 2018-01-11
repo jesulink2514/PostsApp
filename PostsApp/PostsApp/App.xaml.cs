@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using Acr.UserDialogs;
+using Akavache;
 using PostsApp.Views;
 using Autofac;
 using Fusillade;
@@ -32,6 +33,8 @@ namespace PostsApp
         {
             InitializeComponent();
 
+            BlobCache.ApplicationName = "PostsApp";
+
             await NavigationService.NavigateAsync("MenuMasterPage/NavigationPage/MainPage");
         }
 
@@ -44,7 +47,7 @@ namespace PostsApp
             Builder.RegisterTypeForNavigation<CommentsPage>();
 
             Builder.RegisterInstance(UserDialogs.Instance);
-
+            
             Builder.Register((c) => 
                     new FussiladeApi<IPostsService>(
                         "https://jsonplaceholder.typicode.com"

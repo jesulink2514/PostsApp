@@ -21,6 +21,7 @@ namespace PostsApp.Services
         public T Background => ClientFor(NetCache.Background);
 
         public T Speculative => ClientFor(NetCache.Speculative);
+        public T Offline => ClientFor(NetCache.Offline);
 
         private T ClientFor(HttpMessageHandler handler)
         {

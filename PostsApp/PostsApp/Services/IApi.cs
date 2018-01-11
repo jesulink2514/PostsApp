@@ -9,5 +9,6 @@ namespace PostsApp.Services
         T UserInitiated { get; }
         T Background { get; }
         T Speculative { get; }
+        T Offline { get; }
     }
 }

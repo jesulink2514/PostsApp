@@ -1,11 +1,14 @@
-﻿using Prism.Commands;
+﻿using System;
+using Prism.Commands;
 using Prism.Navigation;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Acr.UserDialogs;
+using Akavache;
 using Fusillade;
+using Plugin.Connectivity;
 using PostsApp.Models;
 using PostsApp.Services;
 
@@ -24,7 +27,7 @@ namespace PostsApp.ViewModels
         {
             _userDialogs = userDialogs;
             _postsService = postsService;
-            RefreshPostsCommand = new DelegateCommand(async()=> await LoadPosts());
+            RefreshPostsCommand = new DelegateCommand(() => LoadPosts(true));
             ViewCommentsCommand= new DelegateCommand<Post>(ViewComments);
         }
 
@@ -36,25 +39,29 @@ namespace PostsApp.ViewModels
         public bool IsLoading { get; set; }
         public ICommand RefreshPostsCommand { get; private set; }
         public ICommand ViewCommentsCommand { get; private set; }
-        public override async void OnNavigatedTo(NavigationParameters parameters)
+        public override void OnNavigatedTo(NavigationParameters parameters)
         {
             NetCache.Speculative.ResetLimit(5 * 1024);
 
-            await LoadPosts();
+            LoadPosts();
 
-            await LoadComments();
-        }   
+            //await LoadComments();
+        }
 
-        private async Task LoadPosts()
+        private void LoadPosts(bool force = false)
         {
             IsLoading = true;
 
-            var posts = await _postsService.UserInitiated.ListPostsAsync();
-
-            Posts = posts.ToList();
-
-            _userDialogs.Toast("Posts updated");
-
+            BlobCache.LocalMachine.GetAndFetchLatest("posts",
+                    fetchFunc: async () =>
+                    {
+                        var posts = await _postsService.Background.ListPostsAsync();
+                        _userDialogs.Toast("Posts updated.");
+                        return posts;
+                    },
+                    fetchPredicate: (offset) => force || (DateTimeOffset.Now - offset) > TimeSpan.FromSeconds(30))
+                .Subscribe((posts) => Posts = posts.ToList(),(e) => _userDialogs.Toast("Check your internet connection."));
+            
             IsLoading = false;
         }
 
